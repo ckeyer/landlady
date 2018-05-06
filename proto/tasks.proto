@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package landlady;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+
+service Tasks {
+    rpc NewProject(TaskProject) returns (TaskProject) {}
+    rpc GetProject(TaskProject) returns (TaskProject) {}
+    // rpc ListProjects(empty.Empty) returns (TaksProjectList) {}
+    // rpc DeleteProject(TaskProject) returns (empty.Empty) {}
+
+    rpc AddTasks(TaskList) returns (Task) {}
+    rpc RequestTasks(RequestTaskOption) returns (TaskList) {}
+    rpc CompleteTask(TaskResult) returns (google.protobuf.Empty) {}
+}
+
+message TaskProject {
+    string name = 1;
+    string module = 2;
+    int64 countTasks = 3;
+    string status = 4;
+    google.protobuf.Timestamp startAt = 5;
+}
+
+message TaksProjectList {
+    repeated TaskProject items = 1;
+}
+
+message Task {
+    string projectName = 1;
+    string url = 2;
+
+    map<string, string> labels = 3;
+}
+
+message TaskList {
+    repeated Task items = 1;
+}
+
+message RequestTaskOption {
+    string projectName = 1;
+    int64 count = 2;
+}
+
+message TaskResult {
+    string name = 1;
+
+    google.protobuf.Timestamp doneAt = 2;
+}
