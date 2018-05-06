@@ -18,17 +18,18 @@ service Tasks {
     // rpc ListProjects(empty.Empty) returns (TaksProjectList) {}
     // rpc DeleteProject(TaskProject) returns (empty.Empty) {}
 
-    rpc AddTasks(TaskList) returns (Task) {}
+    rpc AddTasks(TaskList) returns (google.protobuf.Empty) {}
     rpc RequestTasks(RequestTaskOption) returns (TaskList) {}
-    rpc CompleteTask(TaskResult) returns (google.protobuf.Empty) {}
+    rpc CompleteTask(TaskList) returns (google.protobuf.Empty) {}
 }
 
 message TaskProject {
     string name = 1;
     string module = 2;
-    int64 countTasks = 3;
+    string desc = 3;
     string status = 4;
-    google.protobuf.Timestamp startAt = 5;
+    int64 countTasks = 5;
+    google.protobuf.Timestamp startAt = 6;
 }
 
 message TaksProjectList {
@@ -49,10 +50,4 @@ message TaskList {
 message RequestTaskOption {
     string projectName = 1;
     int64 count = 2;
-}
-
-message TaskResult {
-    string name = 1;
-
-    google.protobuf.Timestamp doneAt = 2;
 }

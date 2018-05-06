@@ -25,12 +25,20 @@ const (
 	rCmdDel    = "DEL"
 )
 
+type redisClient struct {
+	redis.Conn
+}
+
+func newRedis(conn redis.Conn) *redisClient {
+	return &redisClient{conn}
+}
+
 // setKV,
 //  exists:
 //    nil:   SET
 //    true:  SETEX
 //    false: SETNX
-func (r *TaskController) setKV(key string, v interface{}, exists ...bool) error {
+func (r *redisClient) setKV(key string, v interface{}, exists ...bool) error {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(v); err != nil {
 		return err
@@ -57,7 +65,7 @@ func (r *TaskController) setKV(key string, v interface{}, exists ...bool) error 
 }
 
 // getKV
-func (r *TaskController) getKV(key string, v interface{}) error {
+func (r *redisClient) getKV(key string, v interface{}) error {
 	data, err := redis.Bytes(r.Do(rCmdGet, key))
 	if err != nil {
 		return err
@@ -69,7 +77,7 @@ func (r *TaskController) getKV(key string, v interface{}) error {
 	return nil
 }
 
-func (r *TaskController) existsKey(key string) (bool, error) {
+func (r *redisClient) existsKey(key string) (bool, error) {
 	n, err := redis.Int(r.Do(rCmdExists, key))
 	if err != nil {
 		return false, err
@@ -80,7 +88,7 @@ func (r *TaskController) existsKey(key string) (bool, error) {
 	return true, nil
 }
 
-func (r *TaskController) deleteKey(key string) error {
+func (r *redisClient) deleteKey(key string) error {
 	n, err := redis.Int(r.Do(rCmdDel, key))
 	if err != nil {
 		return err
@@ -92,7 +100,7 @@ func (r *TaskController) deleteKey(key string) error {
 }
 
 // keys
-func (r *TaskController) listKeys(query string) ([]interface{}, error) {
+func (r *redisClient) listKeys(query string) ([]interface{}, error) {
 	ret := []interface{}{}
 	ks, err := redis.Strings(r.Do(rCmdKeys, query))
 	if err != nil {
@@ -104,7 +112,7 @@ func (r *TaskController) listKeys(query string) ([]interface{}, error) {
 	return ret, nil
 }
 
-func (r *TaskController) listKVs(query string, v interface{}) error {
+func (r *redisClient) listKVs(query string, v interface{}) error {
 	ks, err := r.listKeys(query)
 	if err != nil {
 		return err
