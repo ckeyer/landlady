@@ -75,28 +75,10 @@
 			"revisionTime": "2017-11-13T18:07:20Z"
 		},
 		{
-			"checksumSHA1": "K61Qz4x9QeD2mACYgMP9fcpBqNg=",
-			"path": "github.com/golang/protobuf/ptypes/empty",
-			"revision": "1e59b77b52bf8e4b449a57e6f79f21226d571845",
-			"revisionTime": "2017-11-13T18:07:20Z"
-		},
-		{
 			"checksumSHA1": "O2ItP5rmfrgxPufhjJXbFlXuyL8=",
 			"path": "github.com/golang/protobuf/ptypes/timestamp",
 			"revision": "1e59b77b52bf8e4b449a57e6f79f21226d571845",
 			"revisionTime": "2017-11-13T18:07:20Z"
-		},
-		{
-			"checksumSHA1": "w3QCCIYHgZzIXQ+xTl7oLfFrXHs=",
-			"path": "github.com/gomodule/redigo/internal",
-			"revision": "9c11da706d9b7902c6da69c592f75637793fe121",
-			"revisionTime": "2018-03-14T22:34:43Z"
-		},
-		{
-			"checksumSHA1": "HgOVOUtWUYHcNe8aipwuEZ7YLow=",
-			"path": "github.com/gomodule/redigo/redis",
-			"revision": "9c11da706d9b7902c6da69c592f75637793fe121",
-			"revisionTime": "2018-03-14T22:34:43Z"
 		},
 		{
 			"checksumSHA1": "imvfVf7lRxu0Fz7V2G43CUC6Ff0=",

@@ -11,7 +11,6 @@ option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
-
 service Tasks {
     rpc NewProject(TaskProject) returns (TaskProject) {}
     rpc GetProject(TaskProject) returns (TaskProject) {}
@@ -29,7 +28,7 @@ message TaskProject {
     string desc = 3;
     string status = 4;
     int64 countTasks = 5;
-    google.protobuf.Timestamp startAt = 6;
+    google.protobuf.Timestamp startAt = 6 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
 }
 
 message TaksProjectList {
@@ -39,8 +38,6 @@ message TaksProjectList {
 message Task {
     string projectName = 1;
     string url = 2;
-
-    map<string, string> labels = 3;
 }
 
 message TaskList {

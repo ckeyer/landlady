@@ -1,7 +1,7 @@
 package landlady
 
 const (
-	TaskProjectStatusOK        = "ok"
+	TaskProjectStatusRunning   = "running"
 	TaskProjectStatusCompleted = "completed"
 	TaskProjectStatusCancel    = "cancel"
 )

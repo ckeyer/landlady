@@ -2,34 +2,40 @@ package task
 
 import (
 	"strings"
-	"sync"
+	"time"
 
 	"github.com/funxdata/commons/gerr"
 	pb "github.com/funxdata/landlady/proto"
 	"github.com/gogo/protobuf/types"
-	"github.com/gomodule/redigo/redis"
 	"golang.org/x/net/context"
+	redis "gopkg.in/redis.v5"
 )
 
 const (
 	rKeySep            = ":"
 	rKeyPreTaskProject = "task_project"
+
+	rKeyTodos = "todos"
+	rKeyDoing = "doing"
+	rKeyDone  = "done"
 )
 
 var _ pb.TasksServer = (*TaskController)(nil)
 
 type TaskController struct {
-	sync.Mutex
-	*redisClient
+	*redis.Client
 }
 
-func NewTasks(rconn redis.Conn) *TaskController {
+func NewTasks(rcli *redis.Client) *TaskController {
 	return &TaskController{
-		redisClient: newRedis(rconn),
+		Client: rcli,
 	}
 }
 
 func (t *TaskController) NewProject(ctx context.Context, in *pb.TaskProject) (*pb.TaskProject, error) {
+	in.Status = pb.TaskProjectStatusRunning
+	in.StartAt = time.Now()
+
 	err := t.setKV(t.projectKey(in), in, false)
 
 	if err != nil {
@@ -48,7 +54,10 @@ func (t *TaskController) GetProject(ctx context.Context, in *pb.TaskProject) (*p
 }
 
 func (t *TaskController) AddTasks(ctx context.Context, in *pb.TaskList) (*types.Empty, error) {
-	return nil, nil
+	for _, t := range in.Items {
+
+	}
+	return &types.Empty{}, nil
 }
 
 func (t *TaskController) RequestTasks(ctx context.Context, in *pb.RequestTaskOption) (*pb.TaskList, error) {
@@ -56,7 +65,7 @@ func (t *TaskController) RequestTasks(ctx context.Context, in *pb.RequestTaskOpt
 }
 
 func (t *TaskController) CompleteTask(ctx context.Context, in *pb.TaskList) (*types.Empty, error) {
-	return nil, nil
+	return &types.Empty{}, nil
 }
 
 // projectKey redis Key
