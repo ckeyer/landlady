@@ -8,8 +8,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-func Logger() grpc.ServerOption {
-	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+func Logger() grpc.UnaryServerInterceptor {
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		start := time.Now()
 		ret, err := handler(ctx, req)
 		consume := time.Now().Sub(start)
@@ -26,5 +26,5 @@ func Logger() grpc.ServerOption {
 		}
 
 		return ret, err
-	})
+	}
 }

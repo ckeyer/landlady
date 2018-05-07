@@ -9,16 +9,22 @@
 			"revisionTime": "2018-05-02T11:12:38Z"
 		},
 		{
-			"checksumSHA1": "Aavrc2wi0fUrCDIBDGeyk00VpjE=",
-			"path": "github.com/funxdata/commons/rpc",
-			"revision": "595d5f4c24e5023f114837880e82bd4c9c3ef34c",
-			"revisionTime": "2018-05-06T08:40:09Z"
+			"checksumSHA1": "wfSwfpLkGqiTelNSg3LgwKdlcEU=",
+			"path": "github.com/funxdata/commons/gerr",
+			"revision": "781d3fe17f5e772d1a29de98cb16cde88624e85f",
+			"revisionTime": "2018-05-07T15:06:16Z"
 		},
 		{
-			"checksumSHA1": "1jU76nKQz/H0cbbxUYVZ6wz9sWA=",
+			"checksumSHA1": "VMeogu5HRLppu6g/V14K0+rwpdY=",
+			"path": "github.com/funxdata/commons/rpc",
+			"revision": "781d3fe17f5e772d1a29de98cb16cde88624e85f",
+			"revisionTime": "2018-05-07T15:06:16Z"
+		},
+		{
+			"checksumSHA1": "YGc9Gc7IO47D5AwNVt5AVuUXEWk=",
 			"path": "github.com/funxdata/commons/rpc/middleware",
-			"revision": "595d5f4c24e5023f114837880e82bd4c9c3ef34c",
-			"revisionTime": "2018-05-06T08:40:09Z"
+			"revision": "781d3fe17f5e772d1a29de98cb16cde88624e85f",
+			"revisionTime": "2018-05-07T15:06:16Z"
 		},
 		{
 			"checksumSHA1": "ehhDW5xOMs7vp2dxSoKBG8tJSB4=",
@@ -79,6 +85,12 @@
 			"path": "github.com/golang/protobuf/ptypes/timestamp",
 			"revision": "1e59b77b52bf8e4b449a57e6f79f21226d571845",
 			"revisionTime": "2017-11-13T18:07:20Z"
+		},
+		{
+			"checksumSHA1": "a5pGpTP8bSNLEFDUmQU8XsOrYt4=",
+			"path": "github.com/grpc-ecosystem/go-grpc-middleware",
+			"revision": "f63a7dfb64c138bd93d5c5b896d8b33c4b08e000",
+			"revisionTime": "2017-06-11T11:46:47Z"
 		},
 		{
 			"checksumSHA1": "imvfVf7lRxu0Fz7V2G43CUC6Ff0=",

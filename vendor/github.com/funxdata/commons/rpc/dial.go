@@ -4,11 +4,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-func Dial() *grpc.ClientConn {
+func Dial(endpoint string) *grpc.ClientConn {
 	opts := []grpc.DialOption{
 		grpc.WithInsecure(),
 	}
-	conn, err := grpc.Dial("127.0.0.1:6666", opts...)
+	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return nil
 	}

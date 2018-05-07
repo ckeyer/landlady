@@ -6,6 +6,7 @@ import (
 	"github.com/funxdata/commons/rpc/middleware"
 	pb "github.com/funxdata/landlady/proto"
 	"github.com/funxdata/landlady/task"
+	grpc_md "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	redis "gopkg.in/redis.v5"
@@ -30,7 +31,7 @@ func TaskCmd() *cobra.Command {
 				logrus.Fatalf("connect redis failed, %s", err)
 			}
 
-			s := grpc.NewServer(middleware.Logger(), middleware.Recovery())
+			s := grpc.NewServer(grpc_md.WithUnaryServerChain(middleware.Logger(), middleware.Recovery()))
 			pb.RegisterTasksServer(s, task.NewTasks(rcli))
 
 			logrus.Infof("server starting at %s", addr)

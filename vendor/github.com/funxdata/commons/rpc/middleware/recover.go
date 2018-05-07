@@ -12,8 +12,8 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
-func Recovery() grpc.ServerOption {
-	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (_ interface{}, err error) {
+func Recovery() grpc.UnaryServerInterceptor {
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (_ interface{}, err error) {
 		defer func() {
 			if r := recover(); r != nil {
 				out := stack(2)
@@ -23,7 +23,7 @@ func Recovery() grpc.ServerOption {
 		}()
 
 		return handler(ctx, req)
-	})
+	}
 }
 
 func stack(skip int) *bytes.Buffer {
