@@ -1,13 +1,17 @@
 package zufang58xian
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/ckeyer/logrus"
+	pb "github.com/funxdata/landlady/proto"
 )
 
 const (
@@ -17,12 +21,18 @@ const (
 )
 
 type Zufang58xian struct {
-	batch string
+	batch  string
+	logger *logrus.Logger
 }
 
 func newZufang58xian() *Zufang58xian {
+	batch := time.Now().Format("20060102T150405")
+	logger := logrus.New(logrus.Fields{"module": moduleName, "batch": batch})
+	logger.SetLevel(logrus.DebugLevel)
+
 	return &Zufang58xian{
-		batch: time.Now().Format("20060102T150405"),
+		batch:  batch,
+		logger: logger,
 	}
 }
 
@@ -86,6 +96,46 @@ func (z *Zufang58xian) ScanURLs(cli *http.Client, pageIndex int) ([]string, erro
 	})
 
 	return urls, nil
+}
+
+// ResolveRequest
+func (z *Zufang58xian) Handle(cli *http.Client, req *http.Request) (*pb.House, error) {
+	resp, err := cli.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	buf := new(bytes.Buffer)
+	_, err = io.Copy(buf, resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	doc, err := goquery.NewDocumentFromReader(buf)
+	if err != nil {
+		return nil, err
+	}
+
+	doc.Find("selector")
+	info := &pb.TaskMetadata{
+		Module:    z.ModuleName(),
+		OriginURL: req.URL.String(),
+		RealURL:   resp.Request.URL.String(),
+		ShortURL:  shortURL(resp.Request.URL),
+		HandleAt:  time.Now(),
+	}
+
+	fmt.Println(info)
+	return nil, nil
+}
+
+func (z *Zufang58xian) name() {
+
+}
+
+func shortURL(u *url.URL) string {
+	return fmt.Sprintf("%s://%s%s", u.Scheme, u.Host, u.EscapedPath())
 }
 
 func pageURL(n int) string {

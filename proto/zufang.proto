@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package landlady;
+
+//import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+service Zufang {
+
+}
+
+message TaskMetadata {
+    // 原始 URL
+    string originURL = 1;
+    // 实际 URL
+    string realURL = 2;
+    // 去掉query的 URL
+    string shortURL = 3;
+    // 处理时间
+    google.protobuf.Timestamp handleAt = 4 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+    // 模块名称
+    string module = 5;
+    string batch = 6;
+}
+
+message House {
+    TaskMetadata metadata = 1;
+    string name = 2;
+    int64 price = 3;
+    string payWay = 4;
+}
