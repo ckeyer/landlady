@@ -26,6 +26,7 @@ message TaskMetadata {
     google.protobuf.Timestamp handleAt = 4 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
     // 模块名称
     string module = 5;
+    // 执行批次
     string batch = 6;
 }
 
@@ -34,4 +35,34 @@ message House {
     string name = 2;
     int64 price = 3;
     string payWay = 4;
+    int64 roomSize = 5;
+    google.protobuf.Timestamp releaseAt = 6 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+    Location location = 7;
+    Apartment apartment = 8;
+}
+
+message Location {
+    LocationCoordinates coordinates = 1;
+    string province = 2; // 省
+    string city = 3; // 市
+    string county = 4; // 区
+    string street = 5; // 街道
+    string additional = 6; // 补充信息
+}
+
+// 地理位置
+message LocationCoordinates {
+    float lon = 1; // 经度
+    float lat = 2; // 维度
+}
+
+// 公寓
+message Apartment {
+    string name = 1;
+    Location location = 2;
+}
+
+message User {
+    string name = 1;
+    string phone = 2;
 }
