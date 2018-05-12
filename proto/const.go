@@ -1,7 +1,11 @@
 package landlady
 
 const (
-	TaskProjectStatusRunning   = "running"
-	TaskProjectStatusCompleted = "completed"
-	TaskProjectStatusCancel    = "cancel"
+	TaskProjectStatus_Running   = "running"
+	TaskProjectStatus_Completed = "completed"
+	TaskProjectStatus_Cancel    = "cancel"
+)
+
+const (
+	PageInfoStatus_Downloaded = "d"
 )

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package landlady;
+
+import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+message Page {
+    URLInfo url = 1;
+    bytes content = 2;
+    // status
+    string status = 3;
+    // 处理时间
+    google.protobuf.Timestamp handleAt = 4 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+}
+
+message URLInfo {
+    // 原始 URL
+    string originURL = 1;
+    // 实际 URL
+    string realURL = 2;
+    // 去掉query的 URL
+    string shortURL = 3;
+}
+
+message PageList {
+    repeated Page items = 1;
+}

@@ -6,17 +6,21 @@
 
 	It is generated from these files:
 		house.proto
+		pages.proto
 		tasks.proto
 
 	It has these top-level messages:
-		TaskMetadata
 		House
+		TaskMetadata
 		Location
-		LocationCoordinates
+		Coordinates
 		Apartment
 		User
+		Page
+		URLInfo
+		PageList
 		TaskProject
-		TaksProjectList
+		TaskProjectList
 		Task
 		TaskList
 		RequestTaskOption
@@ -51,26 +55,6 @@ var _ = time.Kitchen
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
-type TaskMetadata struct {
-	// 原始 URL
-	OriginURL string `protobuf:"bytes,1,opt,name=originURL,proto3" json:"originURL,omitempty"`
-	// 实际 URL
-	RealURL string `protobuf:"bytes,2,opt,name=realURL,proto3" json:"realURL,omitempty"`
-	// 去掉query的 URL
-	ShortURL string `protobuf:"bytes,3,opt,name=shortURL,proto3" json:"shortURL,omitempty"`
-	// 处理时间
-	HandleAt time.Time `protobuf:"bytes,4,opt,name=handleAt,stdtime" json:"handleAt"`
-	// 模块名称
-	Module string `protobuf:"bytes,5,opt,name=module,proto3" json:"module,omitempty"`
-	// 执行批次
-	Batch string `protobuf:"bytes,6,opt,name=batch,proto3" json:"batch,omitempty"`
-}
-
-func (m *TaskMetadata) Reset()                    { *m = TaskMetadata{} }
-func (m *TaskMetadata) String() string            { return proto.CompactTextString(m) }
-func (*TaskMetadata) ProtoMessage()               {}
-func (*TaskMetadata) Descriptor() ([]byte, []int) { return fileDescriptorHouse, []int{0} }
-
 type House struct {
 	Metadata  *TaskMetadata `protobuf:"bytes,1,opt,name=metadata" json:"metadata,omitempty"`
 	Name      string        `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -85,15 +69,30 @@ type House struct {
 func (m *House) Reset()                    { *m = House{} }
 func (m *House) String() string            { return proto.CompactTextString(m) }
 func (*House) ProtoMessage()               {}
-func (*House) Descriptor() ([]byte, []int) { return fileDescriptorHouse, []int{1} }
+func (*House) Descriptor() ([]byte, []int) { return fileDescriptorHouse, []int{0} }
+
+type TaskMetadata struct {
+	Url *URLInfo `protobuf:"bytes,1,opt,name=url" json:"url,omitempty"`
+	// 处理时间
+	HandleAt time.Time `protobuf:"bytes,4,opt,name=handleAt,stdtime" json:"handleAt"`
+	// 模块名称
+	Module string `protobuf:"bytes,5,opt,name=module,proto3" json:"module,omitempty"`
+	// 执行批次
+	Batch string `protobuf:"bytes,6,opt,name=batch,proto3" json:"batch,omitempty"`
+}
+
+func (m *TaskMetadata) Reset()                    { *m = TaskMetadata{} }
+func (m *TaskMetadata) String() string            { return proto.CompactTextString(m) }
+func (*TaskMetadata) ProtoMessage()               {}
+func (*TaskMetadata) Descriptor() ([]byte, []int) { return fileDescriptorHouse, []int{1} }
 
 type Location struct {
-	Coordinates *LocationCoordinates `protobuf:"bytes,1,opt,name=coordinates" json:"coordinates,omitempty"`
-	Province    string               `protobuf:"bytes,2,opt,name=province,proto3" json:"province,omitempty"`
-	City        string               `protobuf:"bytes,3,opt,name=city,proto3" json:"city,omitempty"`
-	County      string               `protobuf:"bytes,4,opt,name=county,proto3" json:"county,omitempty"`
-	Street      string               `protobuf:"bytes,5,opt,name=street,proto3" json:"street,omitempty"`
-	Additional  string               `protobuf:"bytes,6,opt,name=additional,proto3" json:"additional,omitempty"`
+	Coordinates *Coordinates `protobuf:"bytes,1,opt,name=coordinates" json:"coordinates,omitempty"`
+	Province    string       `protobuf:"bytes,2,opt,name=province,proto3" json:"province,omitempty"`
+	City        string       `protobuf:"bytes,3,opt,name=city,proto3" json:"city,omitempty"`
+	County      string       `protobuf:"bytes,4,opt,name=county,proto3" json:"county,omitempty"`
+	Street      string       `protobuf:"bytes,5,opt,name=street,proto3" json:"street,omitempty"`
+	Additional  string       `protobuf:"bytes,6,opt,name=additional,proto3" json:"additional,omitempty"`
 }
 
 func (m *Location) Reset()                    { *m = Location{} }
@@ -101,16 +100,15 @@ func (m *Location) String() string            { return proto.CompactTextString(m
 func (*Location) ProtoMessage()               {}
 func (*Location) Descriptor() ([]byte, []int) { return fileDescriptorHouse, []int{2} }
 
-// 地理位置
-type LocationCoordinates struct {
-	Lon float32 `protobuf:"fixed32,1,opt,name=lon,proto3" json:"lon,omitempty"`
-	Lat float32 `protobuf:"fixed32,2,opt,name=lat,proto3" json:"lat,omitempty"`
+type Coordinates struct {
+	Longitude float32 `protobuf:"fixed32,1,opt,name=longitude,proto3" json:"longitude,omitempty"`
+	Latitude  float32 `protobuf:"fixed32,2,opt,name=latitude,proto3" json:"latitude,omitempty"`
 }
 
-func (m *LocationCoordinates) Reset()                    { *m = LocationCoordinates{} }
-func (m *LocationCoordinates) String() string            { return proto.CompactTextString(m) }
-func (*LocationCoordinates) ProtoMessage()               {}
-func (*LocationCoordinates) Descriptor() ([]byte, []int) { return fileDescriptorHouse, []int{3} }
+func (m *Coordinates) Reset()                    { *m = Coordinates{} }
+func (m *Coordinates) String() string            { return proto.CompactTextString(m) }
+func (*Coordinates) ProtoMessage()               {}
+func (*Coordinates) Descriptor() ([]byte, []int) { return fileDescriptorHouse, []int{3} }
 
 // 公寓
 type Apartment struct {
@@ -134,10 +132,10 @@ func (*User) ProtoMessage()               {}
 func (*User) Descriptor() ([]byte, []int) { return fileDescriptorHouse, []int{5} }
 
 func init() {
-	proto.RegisterType((*TaskMetadata)(nil), "landlady.TaskMetadata")
 	proto.RegisterType((*House)(nil), "landlady.House")
+	proto.RegisterType((*TaskMetadata)(nil), "landlady.TaskMetadata")
 	proto.RegisterType((*Location)(nil), "landlady.Location")
-	proto.RegisterType((*LocationCoordinates)(nil), "landlady.LocationCoordinates")
+	proto.RegisterType((*Coordinates)(nil), "landlady.Coordinates")
 	proto.RegisterType((*Apartment)(nil), "landlady.Apartment")
 	proto.RegisterType((*User)(nil), "landlady.User")
 }
@@ -180,62 +178,6 @@ var _Zufang_serviceDesc = grpc.ServiceDesc{
 	Metadata:    "house.proto",
 }
 
-func (m *TaskMetadata) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *TaskMetadata) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if len(m.OriginURL) > 0 {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintHouse(dAtA, i, uint64(len(m.OriginURL)))
-		i += copy(dAtA[i:], m.OriginURL)
-	}
-	if len(m.RealURL) > 0 {
-		dAtA[i] = 0x12
-		i++
-		i = encodeVarintHouse(dAtA, i, uint64(len(m.RealURL)))
-		i += copy(dAtA[i:], m.RealURL)
-	}
-	if len(m.ShortURL) > 0 {
-		dAtA[i] = 0x1a
-		i++
-		i = encodeVarintHouse(dAtA, i, uint64(len(m.ShortURL)))
-		i += copy(dAtA[i:], m.ShortURL)
-	}
-	dAtA[i] = 0x22
-	i++
-	i = encodeVarintHouse(dAtA, i, uint64(types.SizeOfStdTime(m.HandleAt)))
-	n1, err := types.StdTimeMarshalTo(m.HandleAt, dAtA[i:])
-	if err != nil {
-		return 0, err
-	}
-	i += n1
-	if len(m.Module) > 0 {
-		dAtA[i] = 0x2a
-		i++
-		i = encodeVarintHouse(dAtA, i, uint64(len(m.Module)))
-		i += copy(dAtA[i:], m.Module)
-	}
-	if len(m.Batch) > 0 {
-		dAtA[i] = 0x32
-		i++
-		i = encodeVarintHouse(dAtA, i, uint64(len(m.Batch)))
-		i += copy(dAtA[i:], m.Batch)
-	}
-	return i, nil
-}
-
 func (m *House) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -255,11 +197,11 @@ func (m *House) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0xa
 		i++
 		i = encodeVarintHouse(dAtA, i, uint64(m.Metadata.Size()))
-		n2, err := m.Metadata.MarshalTo(dAtA[i:])
+		n1, err := m.Metadata.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n2
+		i += n1
 	}
 	if len(m.Name) > 0 {
 		dAtA[i] = 0x12
@@ -286,30 +228,78 @@ func (m *House) MarshalTo(dAtA []byte) (int, error) {
 	dAtA[i] = 0x32
 	i++
 	i = encodeVarintHouse(dAtA, i, uint64(types.SizeOfStdTime(m.ReleaseAt)))
-	n3, err := types.StdTimeMarshalTo(m.ReleaseAt, dAtA[i:])
+	n2, err := types.StdTimeMarshalTo(m.ReleaseAt, dAtA[i:])
 	if err != nil {
 		return 0, err
 	}
-	i += n3
+	i += n2
 	if m.Location != nil {
 		dAtA[i] = 0x3a
 		i++
 		i = encodeVarintHouse(dAtA, i, uint64(m.Location.Size()))
-		n4, err := m.Location.MarshalTo(dAtA[i:])
+		n3, err := m.Location.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n4
+		i += n3
 	}
 	if m.Apartment != nil {
 		dAtA[i] = 0x42
 		i++
 		i = encodeVarintHouse(dAtA, i, uint64(m.Apartment.Size()))
-		n5, err := m.Apartment.MarshalTo(dAtA[i:])
+		n4, err := m.Apartment.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n4
+	}
+	return i, nil
+}
+
+func (m *TaskMetadata) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *TaskMetadata) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Url != nil {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintHouse(dAtA, i, uint64(m.Url.Size()))
+		n5, err := m.Url.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
 		i += n5
+	}
+	dAtA[i] = 0x22
+	i++
+	i = encodeVarintHouse(dAtA, i, uint64(types.SizeOfStdTime(m.HandleAt)))
+	n6, err := types.StdTimeMarshalTo(m.HandleAt, dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n6
+	if len(m.Module) > 0 {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintHouse(dAtA, i, uint64(len(m.Module)))
+		i += copy(dAtA[i:], m.Module)
+	}
+	if len(m.Batch) > 0 {
+		dAtA[i] = 0x32
+		i++
+		i = encodeVarintHouse(dAtA, i, uint64(len(m.Batch)))
+		i += copy(dAtA[i:], m.Batch)
 	}
 	return i, nil
 }
@@ -333,11 +323,11 @@ func (m *Location) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0xa
 		i++
 		i = encodeVarintHouse(dAtA, i, uint64(m.Coordinates.Size()))
-		n6, err := m.Coordinates.MarshalTo(dAtA[i:])
+		n7, err := m.Coordinates.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n6
+		i += n7
 	}
 	if len(m.Province) > 0 {
 		dAtA[i] = 0x12
@@ -372,7 +362,7 @@ func (m *Location) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *LocationCoordinates) Marshal() (dAtA []byte, err error) {
+func (m *Coordinates) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -382,21 +372,21 @@ func (m *LocationCoordinates) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *LocationCoordinates) MarshalTo(dAtA []byte) (int, error) {
+func (m *Coordinates) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
 	_ = l
-	if m.Lon != 0 {
+	if m.Longitude != 0 {
 		dAtA[i] = 0xd
 		i++
-		binary.LittleEndian.PutUint32(dAtA[i:], uint32(math.Float32bits(float32(m.Lon))))
+		binary.LittleEndian.PutUint32(dAtA[i:], uint32(math.Float32bits(float32(m.Longitude))))
 		i += 4
 	}
-	if m.Lat != 0 {
+	if m.Latitude != 0 {
 		dAtA[i] = 0x15
 		i++
-		binary.LittleEndian.PutUint32(dAtA[i:], uint32(math.Float32bits(float32(m.Lat))))
+		binary.LittleEndian.PutUint32(dAtA[i:], uint32(math.Float32bits(float32(m.Latitude))))
 		i += 4
 	}
 	return i, nil
@@ -427,11 +417,11 @@ func (m *Apartment) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x12
 		i++
 		i = encodeVarintHouse(dAtA, i, uint64(m.Location.Size()))
-		n7, err := m.Location.MarshalTo(dAtA[i:])
+		n8, err := m.Location.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n7
+		i += n8
 	}
 	return i, nil
 }
@@ -475,34 +465,6 @@ func encodeVarintHouse(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return offset + 1
 }
-func (m *TaskMetadata) Size() (n int) {
-	var l int
-	_ = l
-	l = len(m.OriginURL)
-	if l > 0 {
-		n += 1 + l + sovHouse(uint64(l))
-	}
-	l = len(m.RealURL)
-	if l > 0 {
-		n += 1 + l + sovHouse(uint64(l))
-	}
-	l = len(m.ShortURL)
-	if l > 0 {
-		n += 1 + l + sovHouse(uint64(l))
-	}
-	l = types.SizeOfStdTime(m.HandleAt)
-	n += 1 + l + sovHouse(uint64(l))
-	l = len(m.Module)
-	if l > 0 {
-		n += 1 + l + sovHouse(uint64(l))
-	}
-	l = len(m.Batch)
-	if l > 0 {
-		n += 1 + l + sovHouse(uint64(l))
-	}
-	return n
-}
-
 func (m *House) Size() (n int) {
 	var l int
 	_ = l
@@ -532,6 +494,26 @@ func (m *House) Size() (n int) {
 	}
 	if m.Apartment != nil {
 		l = m.Apartment.Size()
+		n += 1 + l + sovHouse(uint64(l))
+	}
+	return n
+}
+
+func (m *TaskMetadata) Size() (n int) {
+	var l int
+	_ = l
+	if m.Url != nil {
+		l = m.Url.Size()
+		n += 1 + l + sovHouse(uint64(l))
+	}
+	l = types.SizeOfStdTime(m.HandleAt)
+	n += 1 + l + sovHouse(uint64(l))
+	l = len(m.Module)
+	if l > 0 {
+		n += 1 + l + sovHouse(uint64(l))
+	}
+	l = len(m.Batch)
+	if l > 0 {
 		n += 1 + l + sovHouse(uint64(l))
 	}
 	return n
@@ -567,13 +549,13 @@ func (m *Location) Size() (n int) {
 	return n
 }
 
-func (m *LocationCoordinates) Size() (n int) {
+func (m *Coordinates) Size() (n int) {
 	var l int
 	_ = l
-	if m.Lon != 0 {
+	if m.Longitude != 0 {
 		n += 5
 	}
-	if m.Lat != 0 {
+	if m.Latitude != 0 {
 		n += 5
 	}
 	return n
@@ -619,231 +601,6 @@ func sovHouse(x uint64) (n int) {
 }
 func sozHouse(x uint64) (n int) {
 	return sovHouse(uint64((x << 1) ^ uint64((int64(x) >> 63))))
-}
-func (m *TaskMetadata) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowHouse
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: TaskMetadata: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: TaskMetadata: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field OriginURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowHouse
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthHouse
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.OriginURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RealURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowHouse
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthHouse
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.RealURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ShortURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowHouse
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthHouse
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ShortURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HandleAt", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowHouse
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthHouse
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := types.StdTimeUnmarshal(&m.HandleAt, dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Module", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowHouse
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthHouse
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Module = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Batch", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowHouse
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthHouse
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Batch = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipHouse(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthHouse
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
 }
 func (m *House) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -1120,6 +877,177 @@ func (m *House) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *TaskMetadata) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHouse
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: TaskMetadata: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: TaskMetadata: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Url", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHouse
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHouse
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Url == nil {
+				m.Url = &URLInfo{}
+			}
+			if err := m.Url.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HandleAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHouse
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHouse
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := types.StdTimeUnmarshal(&m.HandleAt, dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Module", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHouse
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthHouse
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Module = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Batch", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHouse
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthHouse
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Batch = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHouse(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHouse
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *Location) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1176,7 +1104,7 @@ func (m *Location) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.Coordinates == nil {
-				m.Coordinates = &LocationCoordinates{}
+				m.Coordinates = &Coordinates{}
 			}
 			if err := m.Coordinates.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
@@ -1348,7 +1276,7 @@ func (m *Location) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *LocationCoordinates) Unmarshal(dAtA []byte) error {
+func (m *Coordinates) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1371,15 +1299,15 @@ func (m *LocationCoordinates) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: LocationCoordinates: wiretype end group for non-group")
+			return fmt.Errorf("proto: Coordinates: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: LocationCoordinates: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: Coordinates: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 5 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Lon", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Longitude", wireType)
 			}
 			var v uint32
 			if (iNdEx + 4) > l {
@@ -1387,10 +1315,10 @@ func (m *LocationCoordinates) Unmarshal(dAtA []byte) error {
 			}
 			v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 			iNdEx += 4
-			m.Lon = float32(math.Float32frombits(v))
+			m.Longitude = float32(math.Float32frombits(v))
 		case 2:
 			if wireType != 5 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Lat", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Latitude", wireType)
 			}
 			var v uint32
 			if (iNdEx + 4) > l {
@@ -1398,7 +1326,7 @@ func (m *LocationCoordinates) Unmarshal(dAtA []byte) error {
 			}
 			v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 			iNdEx += 4
-			m.Lat = float32(math.Float32frombits(v))
+			m.Latitude = float32(math.Float32frombits(v))
 		default:
 			iNdEx = preIndex
 			skippy, err := skipHouse(dAtA[iNdEx:])
@@ -1749,38 +1677,38 @@ func init() { proto.RegisterFile("house.proto", fileDescriptorHouse) }
 
 var fileDescriptorHouse = []byte{
 	// 539 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x52, 0xcb, 0x6e, 0xd3, 0x40,
-	0x14, 0xad, 0xf3, 0xaa, 0x7d, 0xc3, 0xa2, 0x9a, 0xa2, 0xca, 0x8a, 0x20, 0xa9, 0xbc, 0xea, 0x06,
-	0x07, 0xc2, 0x8a, 0x15, 0x34, 0x6c, 0x58, 0x14, 0x21, 0x0d, 0xad, 0x90, 0xd8, 0xdd, 0xd8, 0x53,
-	0x7b, 0x84, 0x3d, 0x63, 0x8d, 0xc7, 0x48, 0xe1, 0x2b, 0xf8, 0x24, 0x96, 0x91, 0xd8, 0x20, 0x3e,
-	0x80, 0x47, 0xbe, 0x04, 0xcd, 0xf8, 0x15, 0x89, 0x4a, 0x88, 0xdd, 0x3d, 0xf7, 0x35, 0xf7, 0x9c,
-	0x39, 0x30, 0x4d, 0x65, 0x55, 0xb2, 0xb0, 0x50, 0x52, 0x4b, 0xe2, 0x66, 0x28, 0xe2, 0x0c, 0xe3,
-	0xed, 0x6c, 0x91, 0x48, 0x99, 0x64, 0x6c, 0x69, 0xf3, 0x9b, 0xea, 0x76, 0xa9, 0x79, 0xce, 0x4a,
-	0x8d, 0x79, 0x51, 0xb7, 0xce, 0x1e, 0x25, 0x5c, 0xa7, 0xd5, 0x26, 0x8c, 0x64, 0xbe, 0x4c, 0x64,
-	0x22, 0xfb, 0x4e, 0x83, 0x2c, 0xb0, 0x51, 0xdd, 0x1e, 0x7c, 0x77, 0xe0, 0xde, 0x35, 0x96, 0x1f,
-	0x5e, 0x33, 0x8d, 0x31, 0x6a, 0x24, 0x0f, 0xc0, 0x93, 0x8a, 0x27, 0x5c, 0xdc, 0xd0, 0x2b, 0xdf,
-	0x39, 0x77, 0x2e, 0x3c, 0xda, 0x27, 0x88, 0x0f, 0xc7, 0x8a, 0x61, 0x66, 0x6a, 0x03, 0x5b, 0x6b,
-	0x21, 0x99, 0x81, 0x5b, 0xa6, 0x52, 0x69, 0x53, 0x1a, 0xda, 0x52, 0x87, 0xc9, 0x0b, 0x70, 0x53,
-	0x43, 0x80, 0x5d, 0x6a, 0x7f, 0x74, 0xee, 0x5c, 0x4c, 0x57, 0xb3, 0xb0, 0xe6, 0x11, 0xb6, 0xd7,
-	0x85, 0xd7, 0x2d, 0x8f, 0xb5, 0xbb, 0xfb, 0xb1, 0x38, 0xfa, 0xfc, 0x73, 0xe1, 0xd0, 0x6e, 0x8a,
-	0x9c, 0xc1, 0x24, 0x97, 0x71, 0x95, 0x31, 0x7f, 0x6c, 0x77, 0x37, 0x88, 0xdc, 0x87, 0xf1, 0x06,
-	0x75, 0x94, 0xfa, 0x13, 0x9b, 0xae, 0x41, 0xf0, 0x65, 0x00, 0xe3, 0x57, 0x46, 0x3e, 0xb2, 0x02,
-	0x37, 0x6f, 0x98, 0x59, 0x32, 0xd3, 0xd5, 0x59, 0xd8, 0x6a, 0x19, 0x1e, 0xf2, 0xa6, 0x5d, 0x1f,
-	0x21, 0x30, 0x12, 0x98, 0xb3, 0x86, 0xa0, 0x8d, 0xcd, 0x3b, 0x85, 0xe2, 0x11, 0xb3, 0xd4, 0x86,
-	0xb4, 0x06, 0xe6, 0xaa, 0x02, 0xb7, 0xef, 0x70, 0x6b, 0x59, 0x79, 0xb4, 0x41, 0x46, 0x0b, 0x25,
-	0x65, 0xfe, 0x96, 0x7f, 0xaa, 0xef, 0x1d, 0xd2, 0x0e, 0x93, 0x35, 0x78, 0x8a, 0x65, 0x0c, 0x4b,
-	0x23, 0xc6, 0xe4, 0x3f, 0xc4, 0xe8, 0xc7, 0x48, 0x08, 0x6e, 0x26, 0x23, 0xd4, 0x5c, 0x0a, 0xff,
-	0xd8, 0xae, 0x20, 0x3d, 0xab, 0xab, 0xa6, 0x42, 0xbb, 0x1e, 0xf2, 0x04, 0x3c, 0x2c, 0x50, 0xe9,
-	0x9c, 0x09, 0xed, 0xbb, 0x76, 0xe0, 0xb4, 0x1f, 0xb8, 0x6c, 0x4b, 0xb4, 0xef, 0x0a, 0xbe, 0x3a,
-	0xe0, 0xb6, 0x9b, 0xc8, 0x73, 0x98, 0x46, 0x52, 0xaa, 0x98, 0x0b, 0xd4, 0xac, 0x6c, 0x84, 0x7c,
-	0xf8, 0xf7, 0x93, 0x2f, 0xfb, 0x26, 0x7a, 0x38, 0x61, 0x04, 0x29, 0x94, 0xfc, 0xc8, 0x45, 0xd4,
-	0xca, 0xda, 0x61, 0x23, 0x77, 0xc4, 0xf5, 0xb6, 0x31, 0x8d, 0x8d, 0x8d, 0xb0, 0x91, 0xac, 0x84,
-	0xee, 0x84, 0xad, 0x91, 0xc9, 0x97, 0x5a, 0x31, 0xa6, 0x5b, 0x1b, 0xd4, 0x88, 0xcc, 0x01, 0x30,
-	0x8e, 0xb9, 0xb9, 0x01, 0xb3, 0xc6, 0x0b, 0x07, 0x99, 0xe0, 0x19, 0x9c, 0xde, 0x71, 0x23, 0x39,
-	0x81, 0x61, 0x26, 0x85, 0xe5, 0x33, 0xa0, 0x26, 0xb4, 0x19, 0xd4, 0xf6, 0x46, 0x93, 0x41, 0x1d,
-	0xbc, 0x01, 0xaf, 0x13, 0xa8, 0xb3, 0x86, 0x73, 0x60, 0x8d, 0xc3, 0xcf, 0x18, 0xfc, 0xfb, 0x33,
-	0x82, 0xc7, 0x30, 0xba, 0x29, 0x99, 0xba, 0x73, 0x97, 0xb1, 0x59, 0x2a, 0x45, 0x2b, 0x52, 0x0d,
-	0x56, 0x2e, 0x4c, 0xde, 0x57, 0xb7, 0x28, 0x92, 0xf5, 0xc9, 0xee, 0xf7, 0xfc, 0x68, 0xb7, 0x9f,
-	0x3b, 0xdf, 0xf6, 0x73, 0xe7, 0xd7, 0x7e, 0xee, 0x6c, 0x26, 0xd6, 0x33, 0x4f, 0xff, 0x04, 0x00,
-	0x00, 0xff, 0xff, 0x73, 0x7a, 0xb4, 0x0d, 0x2f, 0x04, 0x00, 0x00,
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0xbb, 0xae, 0xd3, 0x40,
+	0x10, 0xbd, 0x9b, 0x17, 0xf6, 0x84, 0x02, 0x16, 0xb8, 0xb2, 0x22, 0x94, 0x44, 0xa6, 0x49, 0x83,
+	0x03, 0xa1, 0xa0, 0xe5, 0x86, 0x02, 0x90, 0x2e, 0x42, 0x5a, 0xee, 0x15, 0x12, 0xdd, 0xc4, 0xde,
+	0xd8, 0x16, 0xf6, 0xae, 0x65, 0xaf, 0x91, 0xc2, 0x57, 0xf0, 0x0f, 0xfc, 0x08, 0x12, 0x4d, 0x4a,
+	0xbe, 0x80, 0x47, 0xbe, 0x04, 0xed, 0xfa, 0x59, 0x20, 0x21, 0xba, 0x3d, 0x73, 0xce, 0x38, 0x67,
+	0xce, 0x4c, 0x60, 0x1a, 0xc9, 0xb2, 0xe0, 0x5e, 0x96, 0x4b, 0x25, 0xa9, 0x95, 0xa0, 0x08, 0x12,
+	0x0c, 0x0e, 0xb3, 0x45, 0x28, 0x65, 0x98, 0xf0, 0xb5, 0xa9, 0xef, 0xca, 0xfd, 0x5a, 0xc5, 0x29,
+	0x2f, 0x14, 0xa6, 0x59, 0x25, 0x9d, 0x3d, 0x0c, 0x63, 0x15, 0x95, 0x3b, 0xcf, 0x97, 0xe9, 0x3a,
+	0x94, 0xa1, 0xec, 0x94, 0x1a, 0x19, 0x60, 0x5e, 0xb5, 0x7c, 0x9a, 0x61, 0xc8, 0x8b, 0x0a, 0xb8,
+	0x5f, 0x07, 0x30, 0x7e, 0xa9, 0x7f, 0x96, 0x6e, 0xc0, 0x4a, 0xb9, 0xc2, 0x00, 0x15, 0x3a, 0x64,
+	0x49, 0x56, 0xd3, 0xcd, 0xb9, 0xd7, 0x78, 0xf0, 0xae, 0xb0, 0xf8, 0xf0, 0xba, 0x66, 0x59, 0xab,
+	0xa3, 0x14, 0x46, 0x02, 0x53, 0xee, 0x0c, 0x96, 0x64, 0x65, 0x33, 0xf3, 0xa6, 0x77, 0x61, 0x9c,
+	0xe5, 0xb1, 0xcf, 0x9d, 0xe1, 0x92, 0xac, 0x86, 0xac, 0x02, 0xf4, 0x1c, 0x26, 0x19, 0x1e, 0xde,
+	0xe1, 0xc1, 0x19, 0x19, 0x6d, 0x8d, 0xe8, 0x0c, 0xac, 0x5c, 0xca, 0xf4, 0x6d, 0xfc, 0x89, 0x3b,
+	0x63, 0xd3, 0xd0, 0x62, 0xba, 0x05, 0x3b, 0xe7, 0x09, 0xc7, 0x82, 0x5f, 0x28, 0x67, 0x62, 0x2c,
+	0xcd, 0xbc, 0x2a, 0x0c, 0xaf, 0x19, 0xd1, 0xbb, 0x6a, 0xc2, 0xd8, 0x5a, 0xc7, 0x1f, 0x8b, 0xb3,
+	0xcf, 0x3f, 0x17, 0x84, 0x75, 0x6d, 0xd4, 0x03, 0x2b, 0x91, 0x3e, 0xaa, 0x58, 0x0a, 0xe7, 0x86,
+	0xf9, 0x04, 0xed, 0xa6, 0xba, 0xac, 0x19, 0xd6, 0x6a, 0xe8, 0x63, 0xb0, 0x31, 0xc3, 0x5c, 0xa5,
+	0x5c, 0x28, 0xc7, 0x32, 0x0d, 0x77, 0xba, 0x86, 0x8b, 0x86, 0x62, 0x9d, 0xca, 0xfd, 0x42, 0xe0,
+	0x66, 0x3f, 0x1f, 0xfa, 0x00, 0x86, 0x65, 0x9e, 0xd4, 0x21, 0xde, 0xee, 0xba, 0xaf, 0xd9, 0xe5,
+	0x2b, 0xb1, 0x97, 0x4c, 0xb3, 0xf4, 0x19, 0x58, 0x91, 0x26, 0xf4, 0x6c, 0xa3, 0xff, 0x98, 0xad,
+	0xed, 0xd2, 0x91, 0xa6, 0x32, 0x28, 0x93, 0x2a, 0x38, 0x9b, 0xd5, 0x48, 0x2f, 0x60, 0x87, 0xca,
+	0x8f, 0x4c, 0x64, 0x36, 0xab, 0x80, 0xfb, 0x8d, 0x80, 0xd5, 0xcc, 0x4b, 0x9f, 0xc2, 0xd4, 0x97,
+	0x32, 0x0f, 0x62, 0x81, 0x8a, 0x17, 0xb5, 0xd3, 0x7b, 0x9d, 0xd3, 0xe7, 0x1d, 0xc9, 0xfa, 0x4a,
+	0xbd, 0xae, 0x2c, 0x97, 0x1f, 0x63, 0xe1, 0x37, 0x4b, 0x6f, 0xb1, 0x3e, 0x06, 0x3f, 0x56, 0x07,
+	0xb3, 0x77, 0x9b, 0x99, 0xb7, 0xf6, 0xe8, 0xcb, 0x52, 0xa8, 0x76, 0xed, 0x15, 0xd2, 0xf5, 0x42,
+	0xe5, 0x9c, 0xab, 0xc6, 0x7b, 0x85, 0xe8, 0x1c, 0x00, 0x83, 0x20, 0xd6, 0x26, 0x31, 0xa9, 0x07,
+	0xe8, 0x55, 0xdc, 0x17, 0x30, 0xed, 0x79, 0xa3, 0xf7, 0xc1, 0x4e, 0xa4, 0x08, 0x63, 0x55, 0x06,
+	0xdc, 0x4c, 0x31, 0x60, 0x5d, 0x41, 0x9b, 0x4d, 0x50, 0x55, 0xe4, 0xc0, 0x90, 0x2d, 0x76, 0xdf,
+	0x80, 0xdd, 0x2e, 0xb3, 0x3d, 0x63, 0xd2, 0x3b, 0xe3, 0xfe, 0xe1, 0x0c, 0xfe, 0x7d, 0x38, 0xee,
+	0x23, 0x18, 0x5d, 0x17, 0x3c, 0xff, 0xeb, 0xb7, 0xf4, 0x5f, 0x22, 0x92, 0xa2, 0x89, 0xac, 0x02,
+	0x1b, 0x0b, 0x26, 0xef, 0xcb, 0x3d, 0x8a, 0x70, 0x7b, 0xeb, 0xf8, 0x7b, 0x7e, 0x76, 0x3c, 0xcd,
+	0xc9, 0xf7, 0xd3, 0x9c, 0xfc, 0x3a, 0xcd, 0xc9, 0x6e, 0x62, 0x6e, 0xe0, 0xc9, 0x9f, 0x00, 0x00,
+	0x00, 0xff, 0xff, 0x8c, 0x10, 0xe4, 0xff, 0x13, 0x04, 0x00, 0x00,
 }

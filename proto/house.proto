@@ -5,6 +5,7 @@ package landlady;
 //import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "pages.proto";
 
 option (gogoproto.marshaler_all) = true;
 option (gogoproto.sizer_all) = true;
@@ -13,21 +14,6 @@ option (gogoproto.goproto_getters_all) = false;
 
 service Zufang {
 
-}
-
-message TaskMetadata {
-    // 原始 URL
-    string originURL = 1;
-    // 实际 URL
-    string realURL = 2;
-    // 去掉query的 URL
-    string shortURL = 3;
-    // 处理时间
-    google.protobuf.Timestamp handleAt = 4 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
-    // 模块名称
-    string module = 5;
-    // 执行批次
-    string batch = 6;
 }
 
 message House {
@@ -41,8 +27,18 @@ message House {
     Apartment apartment = 8;
 }
 
+message TaskMetadata {
+    URLInfo url = 1;
+    // 处理时间
+    google.protobuf.Timestamp handleAt = 4 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+    // 模块名称
+    string module = 5;
+    // 执行批次
+    string batch = 6;
+}
+
 message Location {
-    LocationCoordinates coordinates = 1;
+    Coordinates coordinates = 1;
     string province = 2; // 省
     string city = 3; // 市
     string county = 4; // 区
@@ -50,10 +46,9 @@ message Location {
     string additional = 6; // 补充信息
 }
 
-// 地理位置
-message LocationCoordinates {
-    float lon = 1; // 经度
-    float lat = 2; // 维度
+message Coordinates {
+    float longitude = 1; // 经度
+    float latitude = 2; // 维度
 }
 
 // 公寓

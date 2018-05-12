@@ -14,7 +14,7 @@ option (gogoproto.goproto_getters_all) = false;
 service Tasks {
     rpc NewProject(TaskProject) returns (TaskProject) {}
     rpc GetProject(TaskProject) returns (TaskProject) {}
-    // rpc ListProjects(empty.Empty) returns (TaksProjectList) {}
+    // rpc ListProjects(empty.Empty) returns (TaskProjectList) {}
     // rpc DeleteProject(TaskProject) returns (empty.Empty) {}
 
     // 添加url任务
@@ -34,7 +34,7 @@ message TaskProject {
     google.protobuf.Timestamp startAt = 6 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
 }
 
-message TaksProjectList {
+message TaskProjectList {
     repeated TaskProject items = 1;
 }
 

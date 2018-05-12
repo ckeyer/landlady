@@ -12,6 +12,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/ckeyer/logrus"
 	pb "github.com/funxdata/landlady/proto"
+	"github.com/funxdata/landlady/targets"
 )
 
 const (
@@ -21,6 +22,8 @@ const (
 )
 
 type Zufang58xian struct {
+	targets.HTTPTarget
+
 	batch  string
 	logger *logrus.Logger
 }
@@ -53,7 +56,7 @@ func (z *Zufang58xian) PageCount(cli *http.Client) (int, error) {
 		return 0, err
 	}
 
-	doc, err := goquery.NewDocumentFromResponse(resp)
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
 		return 0, err
 	}
@@ -75,13 +78,13 @@ func (z *Zufang58xian) PageCount(cli *http.Client) (int, error) {
 }
 
 func (z *Zufang58xian) ScanURLs(cli *http.Client, pageIndex int) ([]string, error) {
-	resp, err := cli.Get(pageURL(1))
+	resp, err := cli.Get(z.pageURL(pageIndex))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	doc, err := goquery.NewDocumentFromResponse(resp)
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +102,7 @@ func (z *Zufang58xian) ScanURLs(cli *http.Client, pageIndex int) ([]string, erro
 }
 
 // ResolveRequest
-func (z *Zufang58xian) Handle(cli *http.Client, req *http.Request) (*pb.House, error) {
+func (z Zufang58xian) Handle(cli *http.Client, req *http.Request) (*pb.House, error) {
 	resp, err := cli.Do(req)
 	if err != nil {
 		return nil, err
@@ -122,7 +125,7 @@ func (z *Zufang58xian) Handle(cli *http.Client, req *http.Request) (*pb.House, e
 		Module:    z.ModuleName(),
 		OriginURL: req.URL.String(),
 		RealURL:   resp.Request.URL.String(),
-		ShortURL:  shortURL(resp.Request.URL),
+		ShortURL:  z.shortURL(resp.Request.URL),
 		HandleAt:  time.Now(),
 	}
 
@@ -130,15 +133,11 @@ func (z *Zufang58xian) Handle(cli *http.Client, req *http.Request) (*pb.House, e
 	return nil, nil
 }
 
-func (z *Zufang58xian) name() {
-
-}
-
-func shortURL(u *url.URL) string {
+func (z Zufang58xian) shortURL(u *url.URL) string {
 	return fmt.Sprintf("%s://%s%s", u.Scheme, u.Host, u.EscapedPath())
 }
 
-func pageURL(n int) string {
+func (z Zufang58xian) pageURL(n int) string {
 	if n <= 1 {
 		return homePage
 	}
