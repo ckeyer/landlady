@@ -8,7 +8,6 @@ import (
 
 type Metadata interface {
 	ModuleName() string
-	BatchName() string
 }
 
 type PageCounter interface {

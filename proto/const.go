@@ -14,5 +14,5 @@ const (
 )
 
 const (
-	PageInfoStatus_Downloaded = "d"
+	PageInfoStatus_Downloaded = "downloaded"
 )

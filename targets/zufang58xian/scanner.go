@@ -22,17 +22,14 @@ const (
 type Zufang58xian struct {
 	targets.HTTPTarget
 
-	batch  string
 	logger *logrus.Logger
 }
 
-func newZufang58xian() *Zufang58xian {
-	batch := time.Now().Format("20060102T150405")
-	logger := logrus.New(logrus.Fields{"module": moduleName, "batch": batch})
+func New() *Zufang58xian {
+	logger := logrus.New(logrus.Fields{"module": moduleName})
 	logger.SetLevel(logrus.DebugLevel)
 
 	return &Zufang58xian{
-		batch:  batch,
 		logger: logger,
 	}
 }
@@ -40,11 +37,6 @@ func newZufang58xian() *Zufang58xian {
 // ModuleName 模块名称
 func (z Zufang58xian) ModuleName() string {
 	return moduleName
-}
-
-// BatchName 批次
-func (z Zufang58xian) BatchName() string {
-	return z.batch
 }
 
 // PageCount 统计列表页共有多少页

@@ -40,5 +40,6 @@ func (p *PagesServer) Save(ctx context.Context, in *pb.Page) (*types.Empty, erro
 		return nil, err
 	}
 
+	logrus.Infof("insert html (%s) for %s", in.Url.ClearURL, in.Hash)
 	return &types.Empty{}, nil
 }

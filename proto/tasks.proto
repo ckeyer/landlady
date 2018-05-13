@@ -43,6 +43,7 @@ message Task {
     string projectName = 1;
     string url = 2;
     string status = 3;
+    map<string, string> options = 4;
 }
 
 message TaskList {

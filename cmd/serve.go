@@ -26,7 +26,7 @@ func TaskCmd() *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use:   "server",
+		Use:   "serve",
 		Short: "启动任务管理中心",
 		Run: func(cmd *cobra.Command, args []string) {
 			rcli := redis.NewClient(&redisOpt)
