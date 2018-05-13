@@ -58,7 +58,7 @@ func TaskCmd() *cobra.Command {
 	cmd.Flags().StringVar(&redisOpt.Addr, "redis-endpoint", "127.0.0.1:6379", "redis endpoint.")
 	cmd.Flags().IntVar(&redisOpt.DB, "redis-db", 0, "redis db.")
 	cmd.Flags().StringVar(&redisOpt.Password, "redis-auth", "", "redis auth.")
-	cmd.Flags().StringVar(&mgoUrl, "mongodb-url", "mongodb://localhost:40001/zufang", "mongodb URL.")
+	cmd.Flags().StringVar(&mgoUrl, "mongodb-url", "mongodb://localhost:27017/zufang", "mongodb URL.")
 
 	return cmd
 }

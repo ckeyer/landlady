@@ -22,6 +22,8 @@ message Page {
     string status = 3;
     // 处理时间
     google.protobuf.Timestamp handleAt = 4 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+    // ipfs HASH.
+    string hash = 5;
 }
 
 message URLInfo {

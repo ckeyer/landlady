@@ -42,6 +42,7 @@ message TaskProjectList {
 message Task {
     string projectName = 1;
     string url = 2;
+    string status = 3;
 }
 
 message TaskList {
