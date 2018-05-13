@@ -2,14 +2,15 @@ package cmd
 
 import (
 	"github.com/ckeyer/logrus"
+	"github.com/funxdata/commons/mongo"
 	"github.com/funxdata/commons/rpc"
 	"github.com/funxdata/commons/rpc/middleware"
+	"github.com/funxdata/landlady/pkg/pages"
 	"github.com/funxdata/landlady/pkg/tasks"
 	pb "github.com/funxdata/landlady/proto"
 	grpc_md "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
-	mgo "gopkg.in/mgo.v2"
 	redis "gopkg.in/redis.v5"
 )
 
@@ -33,7 +34,7 @@ func TaskCmd() *cobra.Command {
 				logrus.Fatalf("connect redis failed, %s", err)
 			}
 
-			mgoss, err := mgo.Dial(mgoUrl)
+			mgodb, err := mongo.DialDatabase(mgoUrl)
 			if err != nil {
 				logrus.Fatalf("connect mongodb failed, %s", err)
 			}
@@ -42,7 +43,9 @@ func TaskCmd() *cobra.Command {
 				middleware.Logger(),
 				middleware.Recovery(),
 			))
-			pb.RegisterTasksServer(s, tasks.NewTasks(rcli))
+
+			pb.RegisterTasksServer(s, tasks.NewTasksServer(rcli))
+			pb.RegisterPagesServer(s, pages.NewPagesServer(mgodb))
 
 			logrus.Infof("server starting at %s", addr)
 			if err := rpc.ServeTCP(s, addr); err != nil {

@@ -8,7 +8,7 @@ import (
 	mgo "gopkg.in/mgo.v2"
 )
 
-var _ pb.PagesServer = (*TaskController)(nil)
+var _ pb.PagesServer = (*PagesServer)(nil)
 
 type PagesServer struct {
 	basedb *mgo.Database
@@ -34,6 +34,11 @@ func (p *PagesServer) DB(ctx context.Context) *mgo.Database {
 // Save
 func (p *PagesServer) Save(ctx context.Context, in *pb.Page) (*types.Empty, error) {
 	db := p.DB(ctx)
+
+	err := db.C(ColPages).Insert(in)
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.Empty{}, nil
 }

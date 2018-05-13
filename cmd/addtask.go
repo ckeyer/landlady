@@ -38,7 +38,7 @@ func AddTaskCmd() *cobra.Command {
 				tasks = append(tasks, &pb.Task{ProjectName: prjName, Url: u})
 			}
 
-			_, err := cli.AddTasks(context.Background(), &pb.TaskList{Items: tasks})
+			_, err := cli.PushTasks(context.Background(), &pb.TaskList{Items: tasks})
 			if err != nil {
 				logrus.Errorf("add tasks failed", err)
 				return

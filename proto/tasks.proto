@@ -18,11 +18,12 @@ service Tasks {
     // rpc DeleteProject(TaskProject) returns (empty.Empty) {}
 
     // 添加url任务
-    rpc AddTasks(TaskList) returns (google.protobuf.Empty) {}
-    // 添加任务完毕
-    rpc SendCompleted(TaskProject) returns (google.protobuf.Empty) {}
+    rpc PushTasks(TaskList) returns (google.protobuf.Empty) {}
+    // 添加单次任务完毕
+    rpc CompletePushing(TaskProject) returns (google.protobuf.Empty) {}
+
     rpc RequestTasks(RequestTaskOption) returns (TaskList) {}
-    rpc CompleteTask(TaskList) returns (google.protobuf.Empty) {}
+    rpc HandleTasks(TaskList) returns (google.protobuf.Empty) {}
 }
 
 message TaskProject {

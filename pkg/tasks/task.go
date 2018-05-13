@@ -30,14 +30,14 @@ type TaskController struct {
 	*redis.Client
 }
 
-func NewTasks(rcli *redis.Client) *TaskController {
+func NewTasksServer(rcli *redis.Client) *TaskController {
 	return &TaskController{
 		Client: rcli,
 	}
 }
 
 func (t *TaskController) NewProject(ctx context.Context, in *pb.TaskProject) (*pb.TaskProject, error) {
-	in.Status = pb.TaskProjectStatusRunning
+	in.Status = pb.TaskProjectStatus_Running
 	in.StartAt = time.Now()
 
 	bs, _ := json.Marshal(in)
@@ -62,12 +62,17 @@ func (t *TaskController) GetProject(ctx context.Context, in *pb.TaskProject) (*p
 	return ret, nil
 }
 
-func (t *TaskController) AddTasks(ctx context.Context, in *pb.TaskList) (*types.Empty, error) {
+func (t *TaskController) PushTasks(ctx context.Context, in *pb.TaskList) (*types.Empty, error) {
 	for _, item := range in.Items {
 		if err := t.addTask(item); err != nil {
 			logrus.Errorf("add task %s -> %s failed, %s", item.Url, item.ProjectName, err)
 		}
 	}
+	return &types.Empty{}, nil
+}
+
+func (t *TaskController) CompletePushing(ctx context.Context, in *pb.TaskProject) (*types.Empty, error) {
+
 	return &types.Empty{}, nil
 }
 
@@ -100,7 +105,7 @@ func (t *TaskController) RequestTasks(ctx context.Context, in *pb.RequestTaskOpt
 	return &pb.TaskList{Items: ret}, nil
 }
 
-func (t *TaskController) CompleteTask(ctx context.Context, in *pb.TaskList) (*types.Empty, error) {
+func (t *TaskController) HandleTasks(ctx context.Context, in *pb.TaskList) (*types.Empty, error) {
 	for _, task := range in.Items {
 		doingKey := t.projectKey(task.ProjectName, rKeyDoing)
 		doneKey := t.projectKey(task.ProjectName, rKeyDone)

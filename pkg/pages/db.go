@@ -12,10 +12,18 @@ const (
 func setupIndex(db *mgo.Database) error {
 	indexes := &mongo.MgoIndexs{
 		ColPages: []mgo.Index{
-		// mgo.Index{
-		// 	Key:    []string{"name"},
-		// 	Unique: true,
-		// },
+			mgo.Index{
+				Key: []string{"url.originurl"},
+			},
+			mgo.Index{
+				Key: []string{"url.realurl"},
+			},
+			mgo.Index{
+				Key: []string{"url.clearurl"},
+			},
+			mgo.Index{
+				Key: []string{"handleat"},
+			},
 		},
 	}
 
