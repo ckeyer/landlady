@@ -1,7 +1,6 @@
 package zufang58xian
 
 import (
-	"io/ioutil"
 	"net/http"
 	"testing"
 
@@ -45,6 +44,7 @@ func TestScan(t *testing.T) {
 
 // TestHandle
 func TestHandle(t *testing.T) {
+	return
 	cli := http.DefaultClient
 	jurl := `http://jxjump.58.com/service?target=FCADV8oV3os7xtAhI2suhvPnTEK_30M80Za1mFz42mTmlhpHZpk1zEffDjpdRkNz3Q5xoKYl4Bi0ja0Sib7CGDpBCM0sqdsF1EjPRyBP1ZKMCGY1x3hFqeDuk1c7B5bZPVuVAeEvZYetOdm5HKMZL2LxkyIukfCbRGVaWhwAwIAsnVFXVOe12UF_gQYsiu1SCX0Xj4nhW2er_V8Lqir8uSjtm3EgnTnuV4ut2oMzJts5psgXUtKF7IOhn7w&local=483&pubid=32705457&apptype=0&psid=169432669199989300131892197&entinfo=34021339544745_0&cookie=||http%3A%2F%2Fwww.baidu.com%2Flink%3Furl%3DxtfRkxkUxCCcbgyrwhv6uj_05yvkwqkCCdnxAVMTUlaYRt-NH7joLHQJYOdl3pgL%26ck%3D10016.3.9.233.148.234.141.1432%26shh%3Dwww.baidu.com%26sht%3Dbaidu%26wd%3D%26eqid%3Db3fb000300033c18000000025af1caab|c5/nn1rxyrFTka/rGgpBAg==&fzbref=0&key=&params=jxzfbestpc^desc&from=1-list-1`
 	req, _ := http.NewRequest("GET", jurl, nil)
@@ -76,24 +76,19 @@ func TestHandle(t *testing.T) {
 
 // TestJump
 func TestJump(t *testing.T) {
-	return
+	// return
 	cli := http.DefaultClient
 	// _ = "http://xa.58.com/zufang/34021339544745x.shtml"
 	jurl := `http://jxjump.58.com/service?target=FCADV8oV3os7xtAhI2suhvPnTEK_30M80Za1mFz42mTmlhpHZpk1zEffDjpdRkNz3Q5xoKYl4Bi0ja0Sib7CGDpBCM0sqdsF1EjPRyBP1ZKMCGY1x3hFqeDuk1c7B5bZPVuVAeEvZYetOdm5HKMZL2LxkyIukfCbRGVaWhwAwIAsnVFXVOe12UF_gQYsiu1SCX0Xj4nhW2er_V8Lqir8uSjtm3EgnTnuV4ut2oMzJts5psgXUtKF7IOhn7w&local=483&pubid=32705457&apptype=0&psid=169432669199989300131892197&entinfo=34021339544745_0&cookie=||http%3A%2F%2Fwww.baidu.com%2Flink%3Furl%3DxtfRkxkUxCCcbgyrwhv6uj_05yvkwqkCCdnxAVMTUlaYRt-NH7joLHQJYOdl3pgL%26ck%3D10016.3.9.233.148.234.141.1432%26shh%3Dwww.baidu.com%26sht%3Dbaidu%26wd%3D%26eqid%3Db3fb000300033c18000000025af1caab|c5/nn1rxyrFTka/rGgpBAg==&fzbref=0&key=&params=jxzfbestpc^desc&from=1-list-1`
 	req, _ := http.NewRequest("GET", jurl, nil)
 
 	zufang := newZufang58xian()
-	zufang.Handle(cli, req)
-
-	resp, err := cli.Get(jurl)
+	h, err := zufang.Handle(cli, req)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-
-	t.Logf("real URL; %s", resp.Request.URL.String())
-	return
-	bs, _ := ioutil.ReadAll(resp.Body)
-	t.Logf("body: %s", bs)
-	t.Error("...")
+	if h.Metadata.Url.ClearURL == "" {
+		t.Error("failed clearURL.")
+	}
 }

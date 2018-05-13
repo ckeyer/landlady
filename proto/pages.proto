@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package landlady;
 
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
@@ -9,6 +10,10 @@ option (gogoproto.marshaler_all) = true;
 option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
+
+service Pages {
+    rpc Save(Page) returns (google.protobuf.Empty) {}
+}
 
 message Page {
     URLInfo url = 1;
@@ -25,7 +30,7 @@ message URLInfo {
     // 实际 URL
     string realURL = 2;
     // 去掉query的 URL
-    string shortURL = 3;
+    string clearURL = 3;
 }
 
 message PageList {

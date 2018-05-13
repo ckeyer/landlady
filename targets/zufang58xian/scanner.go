@@ -1,9 +1,7 @@
 package zufang58xian
 
 import (
-	"bytes"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -103,34 +101,24 @@ func (z *Zufang58xian) ScanURLs(cli *http.Client, pageIndex int) ([]string, erro
 
 // ResolveRequest
 func (z Zufang58xian) Handle(cli *http.Client, req *http.Request) (*pb.House, error) {
-	resp, err := cli.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	buf := new(bytes.Buffer)
-	_, err = io.Copy(buf, resp.Body)
+	uinfo, body, err := z.DownloadPage(cli, req)
 	if err != nil {
 		return nil, err
 	}
 
-	doc, err := goquery.NewDocumentFromReader(buf)
+	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
 		return nil, err
 	}
 
-	doc.Find("selector")
+	_ = doc
 	info := &pb.TaskMetadata{
-		Module:    z.ModuleName(),
-		OriginURL: req.URL.String(),
-		RealURL:   resp.Request.URL.String(),
-		ShortURL:  z.shortURL(resp.Request.URL),
-		HandleAt:  time.Now(),
+		Url:      uinfo,
+		Module:   z.ModuleName(),
+		HandleAt: time.Now(),
 	}
 
-	fmt.Println(info)
-	return nil, nil
+	return &pb.House{Metadata: info}, nil
 }
 
 func (z Zufang58xian) shortURL(u *url.URL) string {
